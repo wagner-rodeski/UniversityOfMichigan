@@ -94,24 +94,52 @@ d.head(20)
 #  A recession is defined as starting with two consecutive quarters of GDP decline, and ending with 
 #  two consecutive quarters of GDP growth.
 #  A recession bottom is the quarter within a recession which had the lowest GDP.
-# In[]:
 
 c.head(20)
 c['year'] = c['Quarter'].str.split('q').str.get(0)    
 c = c.loc[c['year'] >= '2000']
+c.reset_index(inplace = True)
 
-k = 0
-while k == 0:
-    try:     
-        for i in c.index:
-            if c['GDP'][i+3] > c['GDP'][i+2]:
-                if c['GDP'][i+2] > c['GDP'][i]:
-                    ini_rec = c['Quarter'][i]
-                    k = 1
-    except KeyError:
-        continue
 
+for i in c.index:
+    if c['GDP'][i+2] < c['GDP'][i+1]:
+        if c['GDP'][i+1] < c['GDP'][i]:
+            ini_rec = c['Quarter'][i]
+            break
+            
 ini_rec
+
+# In[]:
+#  def get_recession_end():
+#      '''Returns the year and quarter of the recession end time as a 
+#      string value in a format such as 2005q3'''
+#  
+
+for i in (c.index + c.loc[c['Quarter'] == ini_rec].index[0]):
+    if c['GDP'][i+2] > c['GDP'][i+1]:
+        if c['GDP'][i+1] > c['GDP'][i]:
+            end_rec = c['Quarter'][i]
+            break
+
+end_rec
+
+# In[]:
+#  def get_recession_bottom():
+#      '''Returns the year and quarter of the recession bottom time as a 
+#      string value in a format such as 2005q3'''
+
+index_start = c.loc[c['Quarter'] == ini_rec].index[0]
+index_end = c.loc[c['Quarter'] == end_rec].index[0]
+gdp_min = c['GDP'][index_start : index_end].min()
+
+index_start
+index_end
+gdp_min
+
+bottom_rec = c['Quarter'][c.loc[c['GDP'] == gdp_min].index[0]]
+bottom_rec
+
+
 
 
 
