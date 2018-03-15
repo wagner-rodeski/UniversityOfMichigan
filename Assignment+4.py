@@ -80,11 +80,12 @@ d = d.drop(d[d['RegionName'].str.contains('edit')].index)
 d = d[['State', 'RegionName']]
 d.head(20)
 
-#  e = pd.DataFrame([states.values()]).T
-#  e['State'] = pd.DataFrame([states.keys()]).T
-#  e.rename(columns={0:'State_ext'}, inplace = True)
-#  e.head(20)
-#  pd.merge(d, e, how='left', left_on='State_ext', right_on='State_ext')
+f = pd.DataFrame([states.values()]).T
+f['Abrev'] = pd.DataFrame([states.keys()]).T
+f.rename(columns={0:'State'}, inplace = True)
+f.head(20)
+g = pd.merge(d, f, how='left', left_on='State', right_on='State')
+g.rename(columns={'State':'State_ext','Abrev':'State'}, inplace = True)
 
 # In[]:
 #  def get_recession_start():
@@ -175,5 +176,8 @@ e[e.iloc[:,i].name[:4] + 'q' + str(k)] = (e.iloc[:,i] + e.iloc[:,i+1] )/2
 
 e.drop(e.columns[3:251], axis=1, inplace = True)
 e.drop(e.columns[0], axis=1, inplace = True)
+
+h = pd.merge(e, g, how='inner', left_on='State', right_on='State')
+e.merge(g, how='left', on='State', copy = False)
 
 e = e.set_index(['State','RegionName'])
