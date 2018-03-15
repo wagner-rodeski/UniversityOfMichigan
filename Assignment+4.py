@@ -36,7 +36,7 @@ from scipy.stats import ttest_ind
 
 a = pd.read_csv('City_Zhvi_AllHomes.csv')
 b = pd.read_table('university_towns.txt',names = ['teste'])
-c = pd.read_excel('gdplev.xls')
+c = pd.read_excel('gdplev.xls', usecols = [4, 6], skiprows=7, names = ['Quarter', 'GDP'])
 
 states = {'OH': 'Ohio', 'KY': 'Kentucky', 'AS': 'American Samoa', 'NV': 'Nevada', 
 'WY': 'Wyoming', 'NA': 'National', 'AL': 'Alabama', 'MD': 'Maryland', 'AK': 'Alaska', 
@@ -91,14 +91,27 @@ d.head(20)
 #      '''Returns the year and quarter of the recession start time as a 
 #      string value in a format such as 2005q3'''
 #      
-
+#  A recession is defined as starting with two consecutive quarters of GDP decline, and ending with 
+#  two consecutive quarters of GDP growth.
+#  A recession bottom is the quarter within a recession which had the lowest GDP.
 # In[]:
 
-    
-    
-    
-    
-    
-    
-    
-    
+c.head(20)
+c['year'] = c['Quarter'].str.split('q').str.get(0)    
+c = c.loc[c['year'] >= '2000']
+
+k = 0
+while k == 0:
+    try:     
+        for i in c.index:
+            if c['GDP'][i+3] > c['GDP'][i+2]:
+                if c['GDP'][i+2] > c['GDP'][i]:
+                    ini_rec = c['Quarter'][i]
+                    k = 1
+    except KeyError:
+        continue
+
+ini_rec
+
+
+
