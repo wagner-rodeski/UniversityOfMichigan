@@ -163,4 +163,12 @@ bottom_rec
 #      '''
 a.head()
 
-
+e = a.copy()
+k = 1
+for i in range(51,249,3):
+    e[e.iloc[:,i].name[:4] + 'q' + str(k)] = (e.iloc[:,i] + e.iloc[:,i+1] + e.iloc[:,i+2])/3
+    k = k + 1
+    if k > 4:
+        k = 1
+i = 249
+e[e.iloc[:,i].name[:4] + 'q' + str(k)] = (e.iloc[:,i] + e.iloc[:,i+1] )/2
