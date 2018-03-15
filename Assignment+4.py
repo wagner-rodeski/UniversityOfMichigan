@@ -68,7 +68,7 @@ b.head(20)
 d = pd.DataFrame(b['teste'].str.split('(').str.get(0), columns=['teste'])
 d.rename(columns={'teste':'RegionName'}, inplace = True)
 d['RegionName'][11].find('[edit]')
-
+d['RegionName'] = d['RegionName'].str.strip(' ')
 d['State'] = ''
 for i in d.index:
     if d['RegionName'][i].find('[edit]') != -1:
@@ -100,12 +100,17 @@ c['year'] = c['Quarter'].str.split('q').str.get(0)
 c = c.loc[c['year'] >= '2000']
 c.reset_index(inplace = True)
 
-
+ini_rec = ''
 for i in c.index:
     if c['GDP'][i+2] < c['GDP'][i+1]:
         if c['GDP'][i+1] < c['GDP'][i]:
-            ini_rec = c['Quarter'][i]
+            ini_rec = c['Quarter'][i+1]
             break
+        else:
+            continue
+        break
+    else:
+        continue
             
 ini_rec
 
@@ -118,8 +123,13 @@ ini_rec
 for i in (c.index + c.loc[c['Quarter'] == ini_rec].index[0]):
     if c['GDP'][i+2] > c['GDP'][i+1]:
         if c['GDP'][i+1] > c['GDP'][i]:
-            end_rec = c['Quarter'][i]
+            end_rec = c['Quarter'][i+2]
             break
+        else:
+            continue
+        break
+    else:
+        continue
 
 end_rec
 
@@ -139,7 +149,18 @@ gdp_min
 bottom_rec = c['Quarter'][c.loc[c['GDP'] == gdp_min].index[0]]
 bottom_rec
 
-
-
+# In[]:
+#  def convert_housing_data_to_quarters():
+#      '''Converts the housing data to quarters and returns it as mean 
+#      values in a dataframe. This dataframe should be a dataframe with
+#      columns for 2000q1 through 2016q3, and should have a multi-index
+#      in the shape of ["State","RegionName"].
+#      
+#      Note: Quarters are defined in the assignment description, they are
+#      not arbitrary three month periods.
+#      
+#      The resulting dataframe should have 67 columns, and 10,730 rows.
+#      '''
+a.head()
 
 
