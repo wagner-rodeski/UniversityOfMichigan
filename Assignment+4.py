@@ -172,3 +172,8 @@ for i in range(51,249,3):
         k = 1
 i = 249
 e[e.iloc[:,i].name[:4] + 'q' + str(k)] = (e.iloc[:,i] + e.iloc[:,i+1] )/2
+
+e.drop(e.columns[3:251], axis=1, inplace = True)
+e.drop(e.columns[0], axis=1, inplace = True)
+
+e = e.set_index(['State','RegionName'])
