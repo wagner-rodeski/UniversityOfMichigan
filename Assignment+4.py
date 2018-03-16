@@ -80,12 +80,7 @@ d = d.drop(d[d['RegionName'].str.contains('edit')].index)
 d = d[['State', 'RegionName']]
 d.head(20)
 
-f = pd.DataFrame([states.values()]).T
-f['Abrev'] = pd.DataFrame([states.keys()]).T
-f.rename(columns={0:'State'}, inplace = True)
-f.head(20)
-g = pd.merge(d, f, how='left', left_on='State', right_on='State')
-g.rename(columns={'State':'State_ext','Abrev':'State'}, inplace = True)
+
 
 # In[]:
 #  def get_recession_start():
@@ -177,7 +172,20 @@ e[e.iloc[:,i].name[:4] + 'q' + str(k)] = (e.iloc[:,i] + e.iloc[:,i+1] )/2
 e.drop(e.columns[3:251], axis=1, inplace = True)
 e.drop(e.columns[0], axis=1, inplace = True)
 
-h = pd.merge(e, g, how='inner', left_on='State', right_on='State')
-e.merge(g, how='left', on='State', copy = False)
+f = pd.DataFrame([states.values()]).T
+f['Abrev'] = pd.DataFrame([states.keys()]).T
+f.rename(columns={0:'State'}, inplace = True)
+f.head(20)
 
-e = e.set_index(['State','RegionName'])
+g = pd.merge(d, f, how='left', left_on='State', right_on='State')
+g.rename(columns={'State':'State_ext','Abrev':'State'}, inplace = True)
+g.drop(g.columns[1], axis=1, inplace = True)
+g = g.drop_duplicates()
+
+e.set_index('State', inplace = True)
+g.set_index('State', inplace = True)
+h = e.join(g)
+h.rename(columns={'State_ext':'State'}, inplace = True)
+h.set_index(['State','RegionName'], inplace = True)
+
+h.loc['Texas'].loc['Austin'].loc['2010q3']
